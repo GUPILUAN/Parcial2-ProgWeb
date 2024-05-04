@@ -3,7 +3,7 @@ const Message = require("../models/messageModel");
 
 const newMessage = asyncHandler(async (req, res) => {
   const { text, recipient } = req.body;
-  const message = Message.create({
+  const message = await Message.create({
     text,
     sender: req.user._id,
     recipient,
@@ -12,12 +12,12 @@ const newMessage = asyncHandler(async (req, res) => {
 });
 
 const getMessages = asyncHandler(async (req, res) => {
-  const { recipientId } = req.params;
+  const { recipient } = req.body;
 
   const messages = await Message.find({
     $or: [
-      { sender: req.user._id, recipient: recipientId },
-      { sender: recipientId, recipient: req.user._id },
+      { sender: req.user._id, recipient },
+      { sender: recipient, recipient: req.user._id },
     ],
   }).sort({ timestamp: 1 });
   res.status(200);

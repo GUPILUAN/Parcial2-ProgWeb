@@ -2,8 +2,9 @@ const asyncHandler = require("express-async-handler");
 const Booking = require("../models/bookingModel");
 const PaymentTransaction = require("../models/paymentTransactionModel");
 
-const booking = Booking.find({ booker: req.user._id });
+
 const getPaymentTransaction = asyncHandler(async (req, res) => {
+  const booking = Booking.find({ booker: req.user._id });
   const pts = await PaymentTransaction.find({ booking: booking._id });
   res
     .status(200)
@@ -11,14 +12,15 @@ const getPaymentTransaction = asyncHandler(async (req, res) => {
 });
 
 const makePayment = asyncHandler(async (req, res) => {
-  const { paymentMethod } = req.body;
-  if (!paymentMethod) {
+  const { paymentMethod , booking} = req.body;
+  if (!paymentMethod || !booking) {
     res.status(400);
     throw new Error("Por favor agrega un metodo de pago");
   }
+  const book = await Booking.findOne({_id:booking});
   const pts = await PaymentTransaction.create({
-    booking: booking._id,
-    amount: booking.totalPrice,
+    booking,
+    amount: book.totalPrice,
     paymentMethod,
   });
   res.status(201).json(pts);

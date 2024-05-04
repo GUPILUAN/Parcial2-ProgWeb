@@ -16,9 +16,11 @@ const createBooking = asyncHandler(async (req, res) => {
     throw new Error("No fue posible crear la reservación");
   }
   const car = await Car.findById(carBooked);
-  if(car.owner === req.user._id){
+
+  if(car.owner.toString() === req.user._id.toString()){
     throw new Error("No puedes reservar tu propio auto");
   }
+
   const booking = await Booking.create({
     booker: req.user._id,
     carBooked,

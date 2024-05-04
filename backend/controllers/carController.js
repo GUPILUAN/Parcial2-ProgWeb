@@ -11,6 +11,7 @@ const createCar = asyncHandler(async (req, res) => {
     model,
     brand,
     year,
+    serialNum,
     transmission,
     capacity,
     pricePerDay,
@@ -21,7 +22,7 @@ const createCar = asyncHandler(async (req, res) => {
     !req.user.isOwner ||
     !model ||
     !brand ||
-    !year ||
+    !year ||!serialNum||
     !transmission ||
     !capacity ||
     !pricePerDay ||
@@ -36,6 +37,7 @@ const createCar = asyncHandler(async (req, res) => {
     model,
     brand,
     year,
+    serialNum,
     transmission,
     capacity,
     pricePerDay,
